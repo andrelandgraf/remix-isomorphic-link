@@ -153,5 +153,6 @@ You can use the NavLink className and style prop to style your link. Note that y
 
 Additionally, IsomorphicLink specifies to additional classes that you can use to differ the styling of your outgoing and internal links.
 
+- "isomorphic-link" supplied to all links.
 - "isomorphic-link--internal" is only supplied to internal links.
 - "isomorphic-link--external" is only supplied to outgoing links.

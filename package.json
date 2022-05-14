@@ -1,6 +1,6 @@
 {
   "name": "react-router-isomorphic-link",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A wrapper component around React Router's Link / NavLink components and the native anchor element. One component to rule them all! Render an anchor tag for outgoing links and a React Router Link / NavLink for everything else! Also supports automated final slashes for all internal links (optional) to make your life easier working with Links in react-router!",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

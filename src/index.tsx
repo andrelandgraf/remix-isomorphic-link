@@ -269,7 +269,7 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
             {...props}
             ref={ref}
             href={santizedTo as string}
-            className={`isomorphic-link--external ${isomorphicClassName(className)}`}
+            className={`isomorphic-link isomorphic-link--external ${isomorphicClassName(className)}`}
             style={isomorphicStyle(style)}
           >
             {typeof children === 'function' ? children({ isActive: false }) : children}
@@ -279,7 +279,9 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
             {...props}
             ref={ref}
             to={santizedTo}
-            className={`isomorphic-link--internal ${className}`}
+            className={({ isActive }) =>
+              `isomorphic-link isomorphic-link--internal ${isomorphicClassName(className, isActive)}`
+            }
             style={style}
             replace={replace}
             state={state}

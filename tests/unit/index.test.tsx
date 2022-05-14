@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import {
   useIsomorphicNavigate,
@@ -12,9 +12,8 @@ import {
 const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({ children, host, useFinalSlash = false }) => (
   <BrowserRouter>
     <IsomorphicNavProvider host={host} useFinalSlash={useFinalSlash}>
-      {children}
       <Routes>
-        <Route path="/">Home Page</Route>
+        <Route path="/" element={children} />
         <Route path="/contact">Contact Page</Route>
       </Routes>
     </IsomorphicNavProvider>
@@ -33,6 +32,7 @@ describe('react-router-isompohic-link', () => {
     if (!aElement) return;
     expect(aElement.href).toBe('http://localhost/contact'); // Note: http://localhost seems to be provided by the testing lib env
     expect(aElement.innerHTML).toBe('Link');
+    expect(aElement.className).toContain('isomorphic-link');
     expect(aElement.className).toContain('isomorphic-link--internal');
   });
   test('renders external URL as outgoing', () => {
@@ -47,7 +47,53 @@ describe('react-router-isompohic-link', () => {
     // This is intended. In this case, we cannot know if the link is external or not.
     // We assume it is internal.
     expect(aElement.href).toBe('https://youtube.com/');
+    expect(aElement.className).toContain('isomorphic-link');
     expect(aElement.className).toContain('isomorphic-link--external');
+  });
+  test('renders supplied className correctly for not active internal link', () => {
+    const { container } = render(
+      <Wrapper>
+        <IsomorphicLink to="/contact" className={({ isActive }) => `all ${isActive ? 'active' : 'not-active'}`}>
+          Link
+        </IsomorphicLink>
+      </Wrapper>,
+    );
+    const aElement = container.querySelector('a');
+    expect(aElement).toBeDefined();
+    if (!aElement) return;
+    expect(aElement.className).toEqual('isomorphic-link isomorphic-link--internal all not-active');
+  });
+  test('renders supplied className correctly for active internal link', () => {
+    const { container } = render(
+      <Wrapper>
+        <IsomorphicLink to="/" className={({ isActive }) => `all ${isActive ? 'active' : 'not-active'}`}>
+          Link
+        </IsomorphicLink>
+      </Wrapper>,
+    );
+    const aElement = container.querySelector('a');
+    expect(aElement).toBeDefined();
+    if (!aElement) return;
+    expect(aElement.className).toEqual('isomorphic-link isomorphic-link--internal all active');
+  });
+  test('renders supplied className correctly for external link', () => {
+    const { container } = render(
+      <Wrapper>
+        <IsomorphicLink
+          to="https://youtube.com"
+          className={({ isActive }) => `all ${isActive ? 'active' : 'not-active'}`}
+        >
+          Ext Link
+        </IsomorphicLink>
+      </Wrapper>,
+    );
+    const aElement = container.querySelector('a');
+    expect(aElement).toBeDefined();
+    if (!aElement) return;
+    expect(aElement.className).toContain('isomorphic-link');
+    expect(aElement.className).toContain('isomorphic-link--external');
+    expect(aElement.className).toContain('all');
+    expect(aElement.className).toContain('not-active');
   });
   test('renders external non-HTTP protocols as outgoing', () => {
     const { container } = render(
