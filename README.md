@@ -2,7 +2,7 @@
 
 ## One Component to rule them all links!
 
-This packages provides a single isomorphic link component, that wraps around [React Router's NavLink](https://v5.reactrouter.com/web/api/NavLink) component and the native anchor tag. It provides a simple API to manage both outgoing and internal hrefs through one component!
+This packages provides a single isomorphic link component that wraps around [React Router's NavLink](https://v5.reactrouter.com/web/api/NavLink) component and the native anchor tag. It provides a simple API to manage both outgoing and internal hrefs through one component!
 
 ## Installation
 
@@ -60,7 +60,7 @@ If you have questions, please contact us [via](mailto:help@my-cool-site.com) or
 
 The first href is a "full" URL to an internal page, the second should be handled as an email address, and the third one is a URL to an external website. I want all of them to work in markdown previews (like on GitHub or VS Code) and within my application. That's what React Router Isomorphic Link is intended for!
 
-I mostly use [rehype](https://www.npmjs.com/package/rehype) to map markdown to custom React components. Unfortunately, React Router's Link component does not support outgoing links or full URLs to internal pages. So I find myself repeatetly creating small wrappers around the Link component.
+I mostly use [rehype](https://www.npmjs.com/package/rehype) to map markdown to custom React components. Unfortunately, React Router's Link component does not support outgoing links or full URLs to internal pages. So I find myself repeatedly creating small wrappers around the Link component.
 
 ## Feedback & Issues
 

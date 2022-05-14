@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { FC, PropsWithChildren, CSSProperties } from 'react';
 import React, { useCallback, useContext, useMemo } from 'react';
 import type { NavLinkProps, NavigateOptions, To } from 'react-router-dom';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -211,7 +211,7 @@ const NavigationContext = React.createContext<NavigationContextProps>({
   useFinalSlash: false,
 });
 
-const NavigationContextProvider: React.FC<NavigationContextProps> = ({ children, ...props }) => {
+const NavigationContextProvider: FC<PropsWithChildren<NavigationContextProps>> = ({ children, ...props }) => {
   return <NavigationContext.Provider value={props}>{children}</NavigationContext.Provider>;
 };
 
