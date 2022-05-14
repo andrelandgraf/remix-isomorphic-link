@@ -5,19 +5,19 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   useIsomorphicNavigate,
   IsomorphicLink,
-  NavigationContextProvider,
-  NavigationContextProps,
+  IsomorphicNavProvider,
+  IsomorphicNavContextProps,
 } from '../../src/index';
 
-const Wrapper: React.FC<Partial<NavigationContextProps>> = ({ children, host, useFinalSlash = false }) => (
+const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({ children, host, useFinalSlash = false }) => (
   <BrowserRouter>
-    <NavigationContextProvider host={host} useFinalSlash={useFinalSlash}>
+    <IsomorphicNavProvider host={host} useFinalSlash={useFinalSlash}>
       {children}
       <Routes>
         <Route path="/">Home Page</Route>
         <Route path="/contact">Contact Page</Route>
       </Routes>
-    </NavigationContextProvider>
+    </IsomorphicNavProvider>
   </BrowserRouter>
 );
 

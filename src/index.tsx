@@ -189,15 +189,7 @@ function sanitizeTo(
   return [false, { pathname: sanitizedPathname, search, hash }];
 }
 
-function useSanitizedTo(to: To, explicitlyOutgoing?: boolean): [isExternal: boolean, to: To] {
-  const { host, useFinalSlash } = useContext(NavigationContext);
-  return useMemo(
-    () => sanitizeTo(to, useFinalSlash, explicitlyOutgoing, host),
-    [to, useFinalSlash, explicitlyOutgoing, host],
-  );
-}
-
-interface NavigationContextProps {
+interface IsomorphicNavContextProps {
   host: string | undefined;
   useFinalSlash: boolean | undefined;
 }
@@ -206,14 +198,25 @@ interface NavigationContextProps {
  * Provides further context for the IsomorphicLink component.
  * host: The host of your app, such as "example.com" or "localhost:8888"
  */
-const NavigationContext = React.createContext<NavigationContextProps>({
+const IsomorphicNavContext = React.createContext<IsomorphicNavContextProps>({
   host: undefined,
   useFinalSlash: false,
 });
 
-const NavigationContextProvider: FC<PropsWithChildren<NavigationContextProps>> = ({ children, ...props }) => {
-  return <NavigationContext.Provider value={props}>{children}</NavigationContext.Provider>;
+const IsomorphicNavProvider: FC<PropsWithChildren<IsomorphicNavContextProps>> = ({ children, ...props }) => {
+  return <IsomorphicNavContext.Provider value={props}>{children}</IsomorphicNavContext.Provider>;
 };
+
+/**
+ * Simple hook that uses IsomorphicNavContext to sanitize a given to prop.
+ */
+function useSanitizedTo(to: To, explicitlyOutgoing?: boolean): [isExternal: boolean, to: To] {
+  const { host, useFinalSlash } = useContext(IsomorphicNavContext);
+  return useMemo(
+    () => sanitizeTo(to, useFinalSlash, explicitlyOutgoing, host),
+    [to, useFinalSlash, explicitlyOutgoing, host],
+  );
+}
 
 /**
  * IsomorphicProps for IsomorphicLink and useIsomorphicNavigate
@@ -230,7 +233,7 @@ type IsomorphicNavigateFunction = (to: To, options?: NavigateOptions, props?: Is
  * A wrapper around useNavigate that provides the same functionality as the IsomorphicLink component.
  */
 const useIsomorphicNavigate = (): IsomorphicNavigateFunction => {
-  const { host, useFinalSlash } = useContext(NavigationContext);
+  const { host, useFinalSlash } = useContext(IsomorphicNavContext);
   const navigate = useNavigate();
   const isomorphicNavigate: IsomorphicNavigateFunction = useCallback(
     (to, options?, props?) => {
@@ -249,11 +252,14 @@ const useIsomorphicNavigate = (): IsomorphicNavigateFunction => {
 /**
  * The isomorphic link component
  * - Same interface as the React Router NavLink component.
- * - Wrap this component with the NavigationContextProvider to provider further configuration options.
+ * - Wrap this component with the IsomorphicNavProvider to provider further configuration options.
  * - Explicitly force render as anchor tag by passing isExternal={true}
  */
 const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
-  ({ to, isExternal, className, style, children, ...props }, ref) => {
+  (
+    { to, isExternal, className, style, replace, state, reloadDocument, caseSensitive, end, children, ...props },
+    ref,
+  ) => {
     const [isOutgoing, santizedTo] = useSanitizedTo(to, isExternal);
 
     return (
@@ -266,7 +272,7 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
             className={`isomorphic-link--external ${isomorphicClassName(className)}`}
             style={isomorphicStyle(style)}
           >
-            {children}
+            {typeof children === 'function' ? children({ isActive: false }) : children}
           </a>
         ) : (
           <NavLink
@@ -275,6 +281,11 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
             to={santizedTo}
             className={`isomorphic-link--internal ${className}`}
             style={style}
+            replace={replace}
+            state={state}
+            reloadDocument={reloadDocument}
+            caseSensitive={caseSensitive}
+            end={end}
           >
             {children}
           </NavLink>
@@ -286,8 +297,8 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
 
 IsomorphicLink.displayName = 'IsomorphicLink';
 
-export { IsomorphicLink, useIsomorphicNavigate, NavigationContextProvider };
+export { IsomorphicLink, useIsomorphicNavigate, IsomorphicNavProvider };
 
-export type { IsomorphicLinkProps, NavigationContextProps, IsomorphicNavigateFunction };
+export type { IsomorphicLinkProps, IsomorphicNavContextProps, IsomorphicNavigateFunction };
 
 export default IsomorphicLink;

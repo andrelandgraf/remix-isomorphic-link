@@ -80,12 +80,12 @@ This package exposes the following utilities:
 
 - `IsomorphicLink` component
 - `useIsomorphicNavigate` hook
-- `NavigationContextProvider` context provider
+- `IsomorphicNavProvider` context provider
 
 And the following TypeScript types:
 
 - `IsomorphicLinkProps`
-- `NavigationContextProps`
+- `IsomorphicNavContextProps`
 - `IsomorphicNavigateFunction`
 
 ### IsomorphicLink
@@ -95,21 +95,21 @@ Supported features and how it works:
 - Supports all React Router's NavLink props.
 - Guesses if the supplied `to` prop is internal or external.
 - Allows explicit override via `isExternal` prop.
-- Utilizes config options from the NavigationContext.
+- Utilizes config options from the IsomorphicNavContext.
 
-#### Optional: Configuration via the NavigationProvider
+#### Optional: Configuration via the IsomorphicNavProvider
 
-Use the NavigationProvider to provide configuration options to the IsomorphicLink component:
+Use the IsomorphicNavProvider to provide configuration options to the IsomorphicLink component:
 
 ```jsx
-import { NavigationProvider } from 'react-router-isomorphic-link';
+import { IsomorphicNavProvider } from 'react-router-isomorphic-link';
 const host = process.env.NODE_ENV === 'production' ? 'your-domain.com' : 'localhost:3000';
 
 const App = () => {
   return (
-    <NavigationProvider host={host} useFinalSlash>
+    <IsomorphicNavProvider host={host} useFinalSlash>
       ...
-    </NavigationProvider>
+    </IsomorphicNavProvider>
   );
 };
 ```
