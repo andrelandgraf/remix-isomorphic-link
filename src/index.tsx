@@ -299,7 +299,7 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
 
 IsomorphicLink.displayName = 'IsomorphicLink';
 
-export { IsomorphicLink, useIsomorphicNavigate, IsomorphicNavProvider };
+export { IsomorphicLink, useIsomorphicNavigate, IsomorphicNavProvider, isomorphicClassName, isomorphicStyle };
 
 export type { IsomorphicLinkProps, IsomorphicNavContextProps, IsomorphicNavigateFunction };
 
