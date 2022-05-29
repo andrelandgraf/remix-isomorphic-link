@@ -183,7 +183,7 @@ const UnstyledLink: FC<PropsWithChildren<UnstyledLinkProps>> = ({
     <IsomorphicLink
       {...props}
       to={to}
-      className={({ active }) =>
+      className={({ isActive }) =>
         `${outline === 'none' ? '' : getAriaClasses(outline === 'small')} ${isomorphicClassName(className, active)}`
       }
     >
