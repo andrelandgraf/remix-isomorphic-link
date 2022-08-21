@@ -1,7 +1,8 @@
 import type { FC, PropsWithChildren, CSSProperties } from 'react';
 import React, { useCallback, useContext, useMemo } from 'react';
-import type { NavLinkProps, NavigateOptions, To } from 'react-router-dom';
-import { NavLink, useNavigate } from 'react-router-dom';
+import type { NavigateOptions, To } from 'react-router-dom';
+import type { NavLinkProps } from '@remix-run/react';
+import { NavLink, useNavigate } from '@remix-run/react';
 
 interface HREF {
   href: string;
@@ -15,7 +16,7 @@ interface HREF {
 }
 
 function throwError(message: string): never {
-  throw new Error(`react-router-isomorphic-link: ${message}`);
+  throw new Error(`remix-isomorphic-link: ${message}`);
 }
 
 /**
@@ -116,7 +117,7 @@ function parseHref(href: string, host?: string, isExternal?: boolean): HREF {
     sanitizedHref = href.substring(host.length);
   }
   const isAbsolute = sanitizedHref.startsWith('/');
-  const fakeUrl = `https://react-router-isomorphic-link.com${isAbsolute ? sanitizedHref : `/${sanitizedHref}`}`;
+  const fakeUrl = `https://remix-isomorphic-link.com${isAbsolute ? sanitizedHref : `/${sanitizedHref}`}`;
   const url = new URL(fakeUrl);
   return {
     href,
@@ -193,6 +194,7 @@ interface IsomorphicNavContextProps {
   host: string | undefined;
   useFinalSlash?: boolean;
   openOutgoingAsBlank?: boolean;
+  defaultPrefetch?: NavLinkProps['prefetch'];
 }
 
 /**
@@ -203,6 +205,7 @@ const IsomorphicNavContext = React.createContext<IsomorphicNavContextProps>({
   host: undefined,
   useFinalSlash: false,
   openOutgoingAsBlank: false,
+  defaultPrefetch: 'none',
 });
 
 const IsomorphicNavProvider: FC<PropsWithChildren<IsomorphicNavContextProps>> = ({ children, ...props }) => {
@@ -253,7 +256,7 @@ const useIsomorphicNavigate = (): IsomorphicNavigateFunction => {
 
 /**
  * The isomorphic link component
- * - Same interface as the React Router NavLink component.
+ * - Same interface as the Remix's NavLink component.
  * - Wrap this component with the IsomorphicNavProvider to provider further configuration options.
  * - Explicitly force render as anchor tag by passing isExternal={true}
  */
@@ -262,7 +265,7 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
     { to, isExternal, className, style, replace, state, reloadDocument, caseSensitive, end, children, ...props },
     ref,
   ) => {
-    const { openOutgoingAsBlank } = useContext(IsomorphicNavContext);
+    const { openOutgoingAsBlank, defaultPrefetch } = useContext(IsomorphicNavContext);
     const [isOutgoing, santizedTo] = useSanitizedTo(to, isExternal);
 
     return (
@@ -280,6 +283,7 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
           </a>
         ) : (
           <NavLink
+            prefetch={defaultPrefetch}
             {...props}
             ref={ref}
             to={santizedTo}

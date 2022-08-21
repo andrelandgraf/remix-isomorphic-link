@@ -1,7 +1,7 @@
 {
-  "name": "react-router-isomorphic-link",
-  "version": "0.1.0",
-  "description": "A wrapper component around React Router's Link / NavLink components and the native anchor element. One component to rule them all! Render an anchor tag for outgoing links and a React Router Link / NavLink for everything else! Also supports automated final slashes for all internal links (optional) to make your life easier working with Links in react-router!",
+  "name": "remix-isomorphic-link",
+  "version": "0.0.1",
+  "description": "A wrapper component around Remix's Link / NavLink components and the native anchor element. One component to rule them all! Render an anchor tag for outgoing links and a Remix Link / NavLink for everything else! Also supports automated final slashes for all internal links (optional) to make your life easier working with Links in Remix!",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
@@ -18,8 +18,9 @@
     "dev": "rollup -c -w"
   },
   "keywords": [
-    "react-router",
+    "Remix",
     "ReactRouter",
+    "remix-router",
     "i18n",
     "anchor",
     "react",
@@ -32,12 +33,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/andrelandgraf/react-router-isomorphic-link"
+    "url": "https://github.com/andrelandgraf/remix-isomorphic-link"
   },
-  "homepage": "https://github.com/andrelandgraf/react-router-isomorphic-linkt",
-  "bugs": "https://github.com/andrelandgraf/react-router-isomorphic-link/issues",
+  "homepage": "https://github.com/andrelandgraf/remix-isomorphic-linkt",
+  "bugs": "https://github.com/andrelandgraf/remix-isomorphic-link/issues",
   "license": "MIT",
   "devDependencies": {
+    "@remix-run/node": "^1.6.8",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^13.1.1",
@@ -53,8 +55,8 @@
     "eslint-plugin-react": "^7.28.0",
     "jest": "^27.2.0",
     "prettier": "^2.5.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rollup": "^2.70.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -65,8 +67,8 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
+    "@remix-run/react": "^1.6.8",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.3.0"
+    "react-dom": "^18.0.0"
   }
 }

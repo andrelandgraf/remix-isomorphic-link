@@ -9,14 +9,24 @@ import {
   IsomorphicNavContextProps,
 } from '../../src/index';
 
+import { installGlobals } from '@remix-run/node';
+
+installGlobals();
+
 const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({
   children,
   host,
   useFinalSlash = false,
   openOutgoingAsBlank = false,
+  defaultPrefetch = 'none',
 }) => (
   <BrowserRouter>
-    <IsomorphicNavProvider host={host} useFinalSlash={useFinalSlash} openOutgoingAsBlank={openOutgoingAsBlank}>
+    <IsomorphicNavProvider
+      host={host}
+      useFinalSlash={useFinalSlash}
+      openOutgoingAsBlank={openOutgoingAsBlank}
+      defaultPrefetch={defaultPrefetch}
+    >
       <Routes>
         <Route path="/" element={children} />
         <Route path="/contact">Contact Page</Route>
