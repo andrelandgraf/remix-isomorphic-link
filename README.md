@@ -122,6 +122,34 @@ const App = () => {
 - `openOutgoingAsBlank` prop: Set a policy to open all identified outgoing links in a new tab/window. Defaults to `false`, which will open outgoing links in the same tab/window.
 - `defaultPrefetch` prop: Set a policy to prefetch all identified internal links using Remix's prefetch feature. Defaults to `none` (default in Remix), which will not prefetch outgoing links.
 
+**How to best pass the host to IsomorphicNavProvider?**
+
+Kent uses [this neat function](https://github.com/kentcdodds/kentcdodds.com/blob/ebb36d82009685e14da3d4b5d0ce4d577ed09c63/app/utils/misc.tsx#L229-L237) to calculate the domain URL of an application. We can adapt the function a little to get the current host.
+
+````tsx
+export function getHost(request: Request) {
+  const host = request.headers.get('X-Forwarded-Host') ?? request.headers.get('host');
+  if (!host) {
+    throw new Error('Could not determine domain host.');
+  }
+  return host;
+}
+
+export function loader({ request }: LoaderArgs) {
+  const host = getHost(request);
+  return { host };
+}
+
+export default function Root() {
+  const { host } = useLoaderData();
+  return (
+    <IsomorphicNavProvider host={host}>
+      ...
+    </IsomorphicNavProvider>
+  );
+}
+```
+
 #### isExternal prop
 
 IsomorphicLink component is able identify external URLs and will render a native anchor element instead of the Remix Link component:
@@ -132,7 +160,7 @@ import { IsomorphicLink } from 'remix-isomorphic-link';
 function MyComponent() {
   return <IsomorphicLink to="https://youtube.com">YouTube</IsomorphicLink>;
 }
-```
+````
 
 However, you can also explicitly tell IsomorphicLink to use or not use a native anchor tag for a link:
 
