@@ -57,9 +57,9 @@ Go to the [dashboard](https://my-cool-site.com/dashboard#create) to create a new
 If you have questions, please contact us via [email](mailto:help@my-cool-site.com) or [on Twitter](https://twitter.com/my-cool-site).
 ```
 
-I mostly use [rehype](https://www.npmjs.com/package/rehype) to map markdown to custom React components. Unfortunately, React Router's Link component does not support outgoing links or full URLs to internal pages. So I find myself repeatedly creating small wrappers around the Link component.
+I mostly use [rehype](https://www.npmjs.com/package/rehype) to map Markdown to custom React components. Unfortunately, React Router's Link component does not support outgoing links or full URLs to internal pages. So I find myself repeatedly creating small wrappers around the Link component.
 
-The first href is a "full" URL to an internal page, the second should be handled as an email address, and the third one is a URL to an external website. I want all of them to work in markdown previews (like on GitHub or VS Code) and within my application. That's what React Router Isomorphic Link is intended for!
+The first href is a "full" URL to an internal page, the second should be handled as an email address, and the third one is a URL to an external website. I want all them links to work in Markdown previews (like on GitHub or VS Code) and within my application. That's what React Router Isomorphic Link is intended for!
 
 ## Feedback & Issues
 
@@ -108,7 +108,7 @@ const host = process.env.NODE_ENV === 'production' ? 'your-domain.com' : 'localh
 
 const App = () => {
   return (
-    <IsomorphicNavProvider host={host} useFinalSlash>
+    <IsomorphicNavProvider host={host} useFinalSlash openOutgoingAsBlank>
       ...
     </IsomorphicNavProvider>
   );
@@ -117,6 +117,7 @@ const App = () => {
 
 - `host` prop: Make sure to provide your host, so IsomorphicLink can strip your domain from internal pathnames to support SPA routing through React Router!
 - `useFinalSlash` prop: Some hosts (like Netlify) redirect all paths to a path with a trailing slash. Set this to `true` to automatically add a trailing slash to internal paths to avoid redirects. Defaults to `false`, which will not add a trailing slash to internal paths.
+- `openOutgoingAsBlank` prop: Set a policy to open all identified outgoing links in a new tab/window. Defaults to `false`, which will open outgoing links in the same tab/window.
 
 #### isExternal prop
 
@@ -152,7 +153,7 @@ In this case, IsomorphicLink won't guess but just follow the `isExternal` prop.
 
 You can use the NavLink className and style prop to style your link. Note that you can pass a function to both properties as documented in the [React Router documentation](https://v5.reactrouter.com/web/api/NavLink/classname-string-func). Note that for IsomorphicLink, `active` will always be `false` in case your href is outgoing.
 
-Additionally, IsomorphicLink specifies to additional classes that you can use to differ the styling of your outgoing and internal links.
+Additionally, IsomorphicLink specifies two additional classes that you can use to differ the styling of your outgoing and internal links.
 
 - "isomorphic-link" supplied to all links.
 - "isomorphic-link--internal" is only supplied to internal links.

@@ -9,9 +9,14 @@ import {
   IsomorphicNavContextProps,
 } from '../../src/index';
 
-const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({ children, host, useFinalSlash = false }) => (
+const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({
+  children,
+  host,
+  useFinalSlash = false,
+  openOutgoingAsBlank = false,
+}) => (
   <BrowserRouter>
-    <IsomorphicNavProvider host={host} useFinalSlash={useFinalSlash}>
+    <IsomorphicNavProvider host={host} useFinalSlash={useFinalSlash} openOutgoingAsBlank={openOutgoingAsBlank}>
       <Routes>
         <Route path="/" element={children} />
         <Route path="/contact">Contact Page</Route>
@@ -192,6 +197,20 @@ describe('react-router-isompohic-link', () => {
     // We assume it is internal.
     expect(aElement.href).toBe('http://localhost/contact/'); // Note: http://localhost seems to be provided by the testing lib env
     expect(aElement.className).toContain('isomorphic-link--internal');
+  });
+  test('opens external link in new tab if openOutgoingAsBlank set to true', () => {
+    const { container } = render(
+      <Wrapper openOutgoingAsBlank={true}>
+        <IsomorphicLink to="https://youtube.com">Ext Link</IsomorphicLink>
+      </Wrapper>,
+    );
+    const aElement = container.querySelector('a');
+    expect(aElement).toBeDefined();
+    if (!aElement) return;
+    expect(aElement.href).toBe('https://youtube.com/');
+    expect(aElement.className).toContain('isomorphic-link--external');
+    expect(aElement.target).toEqual('_blank');
+    expect(aElement.rel).toEqual('noopener noreferrer');
   });
   test('removes host if prop provided', () => {
     const { container } = render(

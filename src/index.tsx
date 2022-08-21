@@ -191,7 +191,8 @@ function sanitizeTo(
 
 interface IsomorphicNavContextProps {
   host: string | undefined;
-  useFinalSlash: boolean | undefined;
+  useFinalSlash?: boolean;
+  openOutgoingAsBlank?: boolean;
 }
 
 /**
@@ -201,6 +202,7 @@ interface IsomorphicNavContextProps {
 const IsomorphicNavContext = React.createContext<IsomorphicNavContextProps>({
   host: undefined,
   useFinalSlash: false,
+  openOutgoingAsBlank: false,
 });
 
 const IsomorphicNavProvider: FC<PropsWithChildren<IsomorphicNavContextProps>> = ({ children, ...props }) => {
@@ -260,12 +262,14 @@ const IsomorphicLink = React.forwardRef<HTMLAnchorElement, IsomorphicLinkProps>(
     { to, isExternal, className, style, replace, state, reloadDocument, caseSensitive, end, children, ...props },
     ref,
   ) => {
+    const { openOutgoingAsBlank } = useContext(IsomorphicNavContext);
     const [isOutgoing, santizedTo] = useSanitizedTo(to, isExternal);
 
     return (
       <>
         {isOutgoing ? (
           <a
+            {...(openOutgoingAsBlank ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             {...props}
             ref={ref}
             href={santizedTo as string}
