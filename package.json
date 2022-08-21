@@ -1,6 +1,6 @@
 {
   "name": "remix-isomorphic-link",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A wrapper component around Remix's Link / NavLink components and the native anchor element. One component to rule them all! Render an anchor tag for outgoing links and a Remix Link / NavLink for everything else! Also supports automated final slashes for all internal links (optional) to make your life easier working with Links in Remix!",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

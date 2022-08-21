@@ -168,7 +168,7 @@ function addFinalSlash(pathname: string): string {
  */
 function sanitizeTo(
   to: To,
-  useFinalSlash = false,
+  useTrailingSlash = false,
   explicitlyOutgoing?: boolean,
   host?: string,
 ): [isExternal: boolean, to: To] {
@@ -182,17 +182,17 @@ function sanitizeTo(
     if (href.isOutgoing) {
       return [true, to];
     }
-    const sanitizedPath = useFinalSlash ? addFinalSlash(href.pathname) : href.pathname;
+    const sanitizedPath = useTrailingSlash ? addFinalSlash(href.pathname) : href.pathname;
     return [false, sanitizedPath + href.search + href.hash];
   }
   const { pathname, search, hash } = to;
-  const sanitizedPathname = useFinalSlash && pathname ? addFinalSlash(pathname) : pathname;
+  const sanitizedPathname = useTrailingSlash && pathname ? addFinalSlash(pathname) : pathname;
   return [false, { pathname: sanitizedPathname, search, hash }];
 }
 
 interface IsomorphicNavContextProps {
   host: string | undefined;
-  useFinalSlash?: boolean;
+  useTrailingSlash?: boolean;
   openOutgoingAsBlank?: boolean;
   defaultPrefetch?: NavLinkProps['prefetch'];
 }
@@ -203,7 +203,7 @@ interface IsomorphicNavContextProps {
  */
 const IsomorphicNavContext = React.createContext<IsomorphicNavContextProps>({
   host: undefined,
-  useFinalSlash: false,
+  useTrailingSlash: false,
   openOutgoingAsBlank: false,
   defaultPrefetch: 'none',
 });
@@ -216,10 +216,10 @@ const IsomorphicNavProvider: FC<PropsWithChildren<IsomorphicNavContextProps>> = 
  * Simple hook that uses IsomorphicNavContext to sanitize a given to prop.
  */
 function useSanitizedTo(to: To, explicitlyOutgoing?: boolean): [isExternal: boolean, to: To] {
-  const { host, useFinalSlash } = useContext(IsomorphicNavContext);
+  const { host, useTrailingSlash } = useContext(IsomorphicNavContext);
   return useMemo(
-    () => sanitizeTo(to, useFinalSlash, explicitlyOutgoing, host),
-    [to, useFinalSlash, explicitlyOutgoing, host],
+    () => sanitizeTo(to, useTrailingSlash, explicitlyOutgoing, host),
+    [to, useTrailingSlash, explicitlyOutgoing, host],
   );
 }
 
@@ -238,18 +238,18 @@ type IsomorphicNavigateFunction = (to: To, options?: NavigateOptions, props?: Is
  * A wrapper around useNavigate that provides the same functionality as the IsomorphicLink component.
  */
 const useIsomorphicNavigate = (): IsomorphicNavigateFunction => {
-  const { host, useFinalSlash } = useContext(IsomorphicNavContext);
+  const { host, useTrailingSlash } = useContext(IsomorphicNavContext);
   const navigate = useNavigate();
   const isomorphicNavigate: IsomorphicNavigateFunction = useCallback(
     (to, options?, props?) => {
-      const [isExternal, sanitizedTo] = sanitizeTo(to, useFinalSlash, props?.isExternal, host);
+      const [isExternal, sanitizedTo] = sanitizeTo(to, useTrailingSlash, props?.isExternal, host);
       if (isExternal) {
         window.location.href = sanitizedTo as string;
       } else {
         navigate(sanitizedTo, options);
       }
     },
-    [navigate, host, useFinalSlash],
+    [navigate, host, useTrailingSlash],
   );
   return isomorphicNavigate;
 };

@@ -16,14 +16,14 @@ installGlobals();
 const Wrapper: React.FC<Partial<IsomorphicNavContextProps>> = ({
   children,
   host,
-  useFinalSlash = false,
+  useTrailingSlash = false,
   openOutgoingAsBlank = false,
   defaultPrefetch = 'none',
 }) => (
   <BrowserRouter>
     <IsomorphicNavProvider
       host={host}
-      useFinalSlash={useFinalSlash}
+      useTrailingSlash={useTrailingSlash}
       openOutgoingAsBlank={openOutgoingAsBlank}
       defaultPrefetch={defaultPrefetch}
     >
@@ -196,7 +196,7 @@ describe('react-router-isompohic-link', () => {
   });
   test('adds final slash to internal link if prop provided', () => {
     const { container } = render(
-      <Wrapper useFinalSlash={true}>
+      <Wrapper useTrailingSlash={true}>
         <IsomorphicLink to="contact">Ext Link</IsomorphicLink>
       </Wrapper>,
     );
